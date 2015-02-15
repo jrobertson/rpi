@@ -19,7 +19,11 @@ class RPi
       @state = self.value
     end
 
-    def on()  super(); @state = :on   end
+    def on(duration=nil)
+      super(); 
+      @state = :on
+      (sleep duration; self.off) if duration
+    end
 
     def off()
 
@@ -28,14 +32,17 @@ class RPi
       @state = :off
     end
 
-    def blink(seconds=0.5)
+    def blink(seconds=0.5, duration: nil)
 
       @state = :blink
+      t2 = Time.now + duration if duration
 
       Thread.new do
         while @state == :blink do
           (set_pin HIGH; sleep seconds; set_pin LOW; sleep seconds) 
+          self.off if duration and Time.now >= t2
         end
+        
       end
     end
 

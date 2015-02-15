@@ -7,6 +7,8 @@ require 'pi_piper'
 
 class RPi
   include PiPiper
+  
+  @leds = []
 
   class Led < Pin
 
@@ -62,10 +64,27 @@ class RPi
   end
 
   def initialize(a=[])
+    
     @leds = a.map {|pin| Led.new pin }
+    
+    at_exit do
+      
+      # to avoid "Device or resource busy @ fptr_finalize - /sys/class/gpio/export"
+      # we unexport the pins we used
+      
+      a.each do |pin|
+        
+        uexp = open("/sys/class/gpio/unexport", "w")
+        uexp.write(pin)
+        uexp.close
+      end
+      
+    end    
   end
 
   def led() @leds end
+    
+
 end
 
 
