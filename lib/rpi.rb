@@ -62,10 +62,27 @@ class RPi
       @state = state
     end
   end
+  
+  class Void
+    def on(duration=nil)               end
+    def off()                          end
+    def blink(seconds=0, duration=nil) end
+    alias stop off
+  end  
 
   def initialize(a=[])
     
     @leds = a.map {|pin| Led.new pin }
+    
+    def @leds.[](i)
+
+      if i.to_i >= self.length then
+        puts "RPi warning: Led instance #{i.inspect} not found"
+        Void.new
+      else
+        self.at(i)
+      end 
+    end    
     
     at_exit do
       
@@ -82,8 +99,16 @@ class RPi
     end    
   end
 
-  def led() @leds end
-    
+  def led()    @leds       end
+  
+  def self.unexport(a)
+    a.each do |pin|
+      
+      uexp = open("/sys/class/gpio/unexport", "w")
+      uexp.write(pin)
+      uexp.close
+    end    
+  end
 
 end
 
