@@ -89,17 +89,24 @@ class RPi
       # to avoid "Device or resource busy @ fptr_finalize - /sys/class/gpio/export"
       # we unexport the pins we used
       
-      a.each do |pin|
-        
-        uexp = open("/sys/class/gpio/unexport", "w")
-        uexp.write(pin)
-        uexp.close
-      end
-      
+      unexport_all
     end    
   end
 
   def led()    @leds       end
+    
+  def unexport_all()
+    
+    @leds.each do |pin|
+      
+      uexp = open("/sys/class/gpio/unexport", "w")
+      uexp.write(pin)
+      uexp.close
+    end
+    
+  end
+  
+  alias on_exit unexport_all
   
   def self.unexport(a)
     a.each do |pin|
