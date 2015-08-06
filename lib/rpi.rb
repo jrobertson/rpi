@@ -61,6 +61,10 @@ class RPi
       self.update_value val
       @state = state
     end
+    
+    def to_s()
+      @id
+    end
   end
   
   class Void
@@ -91,7 +95,7 @@ class RPi
       # to avoid "Device or resource busy @ fptr_finalize - /sys/class/gpio/export"
       # we unexport the pins we used
       
-      unexport_all @leds
+      unexport_all a
     end    
   end
 
@@ -101,7 +105,7 @@ class RPi
     
     pins.each do |pin|
       
-      next unless File.exists? '/sys/class/gpio/gpio' + pin
+      next unless File.exists? '/sys/class/gpio/gpio' + pin.to_s
 
       uexp = open("/sys/class/gpio/unexport", "w")
       uexp.write(pin)
