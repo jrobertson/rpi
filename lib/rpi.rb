@@ -72,6 +72,8 @@ class RPi
 
   def initialize(a=[])
     
+    unexport_all a
+    
     @leds = a.map {|pin| Led.new pin }
     
     def @leds.[](i)
@@ -89,16 +91,18 @@ class RPi
       # to avoid "Device or resource busy @ fptr_finalize - /sys/class/gpio/export"
       # we unexport the pins we used
       
-      unexport_all
+      unexport_all @leds
     end    
   end
 
   def led()    @leds       end
     
-  def unexport_all()
+  def unexport_all(pins)
     
-    @leds.each do |pin|
+    pins.each do |pin|
       
+      next unless File.exists? '/sys/class/gpio/gpio' + pin
+
       uexp = open("/sys/class/gpio/unexport", "w")
       uexp.write(pin)
       uexp.close
@@ -106,7 +110,9 @@ class RPi
     
   end
   
-  alias on_exit unexport_all
+  def on_exit
+    unexport_all @leds
+  end
   
   def self.unexport(a)
     a.each do |pin|
