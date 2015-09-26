@@ -10,7 +10,7 @@ class RPi
   
   @leds = []
 
-  class Led < Pin
+  class PinX < Pin
 
     HIGH = 1
     LOW = 0
@@ -78,12 +78,12 @@ class RPi
     
     unexport_all a
     
-    @leds = a.map {|pin| Led.new pin }
+    @pins = a.map {|pin| PinX.new pin }
     
-    def @leds.[](i)
+    def @pins.[](i)
 
       if i.to_i >= self.length then
-        puts "RPi warning: Led instance #{i.inspect} not found"
+        puts "RPi warning: PinX instance #{i.inspect} not found"
         Void.new
       else
         self.at(i)
@@ -99,7 +99,7 @@ class RPi
     end    
   end
 
-  def led()    @leds       end
+  def pins()    @pins       end
     
   def unexport_all(pins)
     
@@ -115,7 +115,7 @@ class RPi
   end
   
   def on_exit
-    unexport_all @leds
+    unexport_all @pins
   end
   
   def self.unexport(a)
@@ -133,5 +133,5 @@ end
 if __FILE__ == $0 then
   # example
   my_rpi = RPi.new %w(17 22 18 4 23 25 27) # <-- each pin connects to an LED
-  my_rpi.led[ARGV.first.to_i].method(ARGV.last.to_sym).call
+  my_rpi.pins[ARGV.first.to_i].method(ARGV.last.to_sym).call
 end
