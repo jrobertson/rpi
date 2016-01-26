@@ -33,6 +33,14 @@ class RPi
       super()
       @state = :off
     end
+    
+    alias high on # opposite of low
+    alias open on # opposite of closed
+    alias lock on # opposite of unlock
+    
+    alias low off
+    alias closed off
+    alias unlock off
 
     def blink(seconds=0.5, duration: nil)
 
