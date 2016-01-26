@@ -35,11 +35,11 @@ class RPi
     end
     
     alias high on # opposite of low
-    alias open on # opposite of closed
+    alias open on # opposite of close
     alias lock on # opposite of unlock
     
     alias low off
-    alias closed off
+    alias close off
     alias unlock off
 
     def blink(seconds=0.5, duration: nil)

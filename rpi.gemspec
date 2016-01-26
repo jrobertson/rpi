@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name = 'rpi'
-  s.version = '0.4.1'
-  s.summary = 'The RPi gem makes it easy to set blinking LEDs on the Raspberry Pi'
+  s.version = '0.4.2'
+  s.summary = 'The RPi gem makes it easy to set the GPIO pins on the Raspberry Pi e.g. RPi.new([4,27]).pins.first.on'
   s.authors = ['James Robertson']
   s.add_runtime_dependency('pi_piper', '~> 1.3', '>=1.3.2')
   s.files = Dir['lib/**/*.rb']
