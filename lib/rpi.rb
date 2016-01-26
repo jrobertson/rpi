@@ -27,11 +27,12 @@ class RPi
       (sleep duration; self.off) if duration
     end
 
-    def off()
+    def off(duration=nil)
 
       return if self.off?
       super()
       @state = :off
+      (sleep duration; self.on) if duration
     end
     
     alias high on # opposite of low
