@@ -39,6 +39,7 @@ class RPi
     alias open on # opposite of close
     alias lock on # opposite of unlock
     
+    alias stop off        
     alias low off
     alias close off
     alias unlock off
@@ -56,8 +57,8 @@ class RPi
         
       end
     end
-
-    alias stop off    
+    
+    alias oscillate blink
 
     def on?()  @state == :on  end
     def off?() @state == :off end
