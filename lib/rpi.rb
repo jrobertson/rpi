@@ -84,8 +84,17 @@ class RPi
     alias stop off
   end  
 
-  def initialize(a=[])
+  def initialize(x=[])
     
+    a = case x
+    when Fixnum
+      [x]
+    when String
+      [x]
+    when Array
+      x
+    end
+
     unexport_all a
     
     @pins = a.map {|pin| PinX.new pin }
@@ -109,7 +118,8 @@ class RPi
     end    
   end
 
-  def pins()    @pins       end
+  def pin()   @pins.first  end
+  def pins()  @pins        end
     
   def unexport_all(pins)
     
