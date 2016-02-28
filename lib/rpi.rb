@@ -18,21 +18,30 @@ class RPi
     def initialize(id)
       @id = id
       super(pin: id, direction: :out)
-      @state = self.value
+      @on, @blinking = false, false
     end
 
-    def on(duration=nil)
+    def on(durationx=nil, duration: nil)
       super(); 
-      @state = :on
-      (sleep duration; self.off) if duration
+      @on = true      
+      duration ||=  durationx
+      
+      @off_thread.exit if @off_thread
+      @on_thread = Thread.new {(sleep duration; self.off()) } if duration
+
     end
 
-    def off(duration=nil)
+    def off(durationx=nil, duration: nil)
 
-      return if self.off?
-      super()
-      @state = :off
-      (sleep duration; self.on) if duration
+      super();
+      return if @internal_call
+      
+      @on, @blinking = false, false      
+      duration ||=  durationx
+      
+      @on_thread.exit if @on_thread
+      @off_thread = Thread.new { (sleep duration; self.on()) } if duration
+
     end
     
     alias high on # opposite of low
@@ -46,12 +55,25 @@ class RPi
 
     def blink(seconds=0.5, duration: nil)
 
-      @state = :blink
+      @blinking = true
       t2 = Time.now + duration if duration
 
       Thread.new do
-        while @state == :blink do
-          (set_pin HIGH; sleep seconds; set_pin LOW; sleep seconds) 
+        while @blinking do
+
+          set_pin HIGH
+          sleep seconds / 2.0
+          break if !@blinking
+          sleep seconds / 2.0 
+          break if !@blinking
+          
+          set_pin LOW;
+          sleep seconds / 2.0
+          break if !@blinking
+          sleep seconds / 2.0
+
+          break if !@blinking
+          
           self.off if duration and Time.now >= t2
         end
         
@@ -60,16 +82,16 @@ class RPi
     
     alias oscillate blink
 
-    def on?()  @state == :on  end
-    def off?() @state == :off end
+    def on?()  @on  end
+    def off?() !@on end
 
     # set val with 0 (off) or 1 (on)
     #
     def set_pin(val)
 
-      state = @state
+      @internal_call = true
       self.update_value val
-      @state = state
+      @internal_call = false
     end
     
     def to_s()
