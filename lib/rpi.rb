@@ -101,11 +101,11 @@ class RPi
     
     def @pins.[](i)
 
-      if i.to_i >= self.length then
+      if i.respond_to? :to_i and i.to_i >= self.length then
         puts "RPi warning: PinX instance #{i.inspect} not found"
         Void.new
       else
-        self.at(i)
+        super(i)
       end 
     end    
     
