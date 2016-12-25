@@ -109,6 +109,8 @@ class RPi
   def initialize(x=[])
     
     a = case x
+    when Integer
+      [x]    
     when Fixnum
       [x]
     when String
