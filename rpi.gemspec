@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'rpi'
-  s.version = '0.5.0'
+  s.version = '0.5.1'
   s.summary = 'The RPi gem makes it easy to set the GPIO pins on the Raspberry Pi e.g. RPi.new([4,27]).pins.first.on'
   s.authors = ['James Robertson']
   s.add_runtime_dependency('rpi_pinout', '~> 0.1', '>=0.1.1')
